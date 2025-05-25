@@ -1,18 +1,15 @@
 'use client'
 
-import { useState, useRef, useEffect, ReactNode } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 import Background from "@/components/D3Components/Background";
 import ScrollingFrame from "@/components/D3Components/ScrollingFrame";
 import Dropdown from "@/components/D3Components/Dropdown";
-
-import RankDetail from '@/components/D3Components/PlayerDetail';
-
 import { GetSeasonIndex, GetSeasonLeaderboardTypes, GetSeasonalLeaderboard } from '@/modules/API_requests';
 import { UppercaseFirstLetters } from '@/modules/stringFuncs';
 
-import slugMap from '@/modules/slugMap.json';
-import displayMap from '@/modules/displayNameMap.json';
+// import slugMap from '@/modules/slugMap.json';
+// import displayMap from '@/modules/displayNameMap.json';
 import RankDisplay from "@/components/D3Components/RankDisplay";
 
 interface options {
@@ -26,7 +23,7 @@ interface leaderboard {
     hero_class_string?: string,
 }
 
-interface Data { // this is the data structure from the Blizzard API
+interface LeaderboardData { // this is the data structure from the Blizzard API
     // _links: {href:string},
     achievement_points?: boolean,
     
@@ -74,10 +71,10 @@ interface playerData {
     string?: string,
 }
 
-export type { options, leaderboard, Data, column, row, rowData, player, playerData }
+export type { options, leaderboard, LeaderboardData, column, row, rowData, player, playerData }
 
 export default function Leaderboard() {
-    const [SearchBar, setSearchBar] = useState("");
+    // const [SearchBar, setSearchBar] = useState("");
     const [Search, setSearch] = useState("");
     
     const [Region, SetRegion] = useState('us');
@@ -86,7 +83,7 @@ export default function Leaderboard() {
     const [Party, SetParty] = useState('Any');
     const [Leaderboard, SetLeaderboard] = useState('achievement-points');
     
-    const [Data, setData] = useState<Data | undefined>(undefined);
+    const [Data, setData] = useState<LeaderboardData | undefined>(undefined);
     const [Loading, setLoading] = useState(true);
     
     const [FilteredLb, SetFilteredLb] = useState<options[]>([{'value':'achievement-points'}]);
@@ -94,8 +91,8 @@ export default function Leaderboard() {
     const PartyOptions = useRef([{'value':'Any'}]);
     const LeaderboardOptions = useRef([{'value':'achievement-points'}]);
     const TitleHasHardcode = useRef(false);
-    const currentSeason = useRef(null);
-    const seasons = Array.from({ length: currentSeason.current }, (_, i) => ({ value: (i + 1).toString() })); // thank you gpt!
+    const currentSeason = useRef<number | null>(null);
+    const seasons = currentSeason.current ? Array.from({ length: currentSeason.current }, (_, i) => ({ value: (i + 1).toString() })) : []; // thank you gpt!
     
     const regions = [ // hard coded regions used to choose regions from dropdown menu
         {'value':'us'},
@@ -104,15 +101,15 @@ export default function Leaderboard() {
         {'value':'tw'},
     ]
     
-    function FilterLeaderboardOptions() { // filters the list of leaderboards so that only the leaderboards that are filtered by will show up
+    const FilterLeaderboardOptions = useCallback(() => {
         const LBFilter = LeaderboardOptions.current.filter(e => {
-            return !isNaN(Number(e.value)) || Party === "Any" && e.value.includes('achievement') || (Party === "Any" || e.value.includes(Party)) && Hardcore === e.value.includes('hardcore');
-        })
+            return !isNaN(Number(e.value)) ||
+            (Party === "Any" && e.value.includes('achievement')) ||
+            ((Party === "Any" || e.value.includes(Party)) && Hardcore === e.value.includes('hardcore'));
+        });
         SetFilteredLb(LBFilter);
-        console.log(LBFilter,Leaderboard);
-        SetLeaderboard(LBFilter[0].value);
-        // SetLeaderboard(LBFilter[0].value);
-    }
+        SetLeaderboard(LBFilter[0]?.value ?? 'achievement-points');
+    }, [Party, Hardcore]);
     
     useEffect(() => { // get season index ( current season )
         GetSeasonIndex(Region).then((seasonsList) => {
@@ -150,10 +147,14 @@ export default function Leaderboard() {
             });
             
             LeaderboardOptions.current = leaderboardOptions;
-            FilterLeaderboardOptions();
+            // FilterLeaderboardOptions();
             PartyOptions.current = partyOptions;
         })
     }, [Region, Season])
+    
+    useEffect(() => {
+        FilterLeaderboardOptions();
+    }, [Party, Hardcore, FilterLeaderboardOptions]);
     
     useEffect(() => {
         setLoading(true);
@@ -163,12 +164,12 @@ export default function Leaderboard() {
             TitleHasHardcode.current = Data?.title?.en_US.toLowerCase().includes('hardcore');
             setLoading(false);
         })
-    }, [Region,Season,Leaderboard])
+    }, [Region,Season,Leaderboard,Hardcore])
     
-    useEffect(FilterLeaderboardOptions, [Party,Hardcore]); // this allows the leaderboard list (dropdown menu) to update
+    // useEffect(FilterLeaderboardOptions, [Party,Hardcore]); // this allows the leaderboard list (dropdown menu) to update
     
-    function handleSearch(passing) {
-        setSearch(passing.target.value);
+    function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
+        setSearch(event.target.value);
     }
     
     function handleHardcore(value: string) {
@@ -203,7 +204,7 @@ export default function Leaderboard() {
             </h1>} */}
             
             <div className='rounded-3xl w-full h-[90vh] px-3 mb-10 py-5 flex flex-col border-2 border-gray-800'> {/* flex container for search and dropdown menus */}
-                <div className="flex flex-row my-3"> {/* flex container for search and dropdown menus */}
+                <div className="flex flex-row my-3 px-2"> {/* flex container for search and dropdown menus */}
                     <h1 className='flex flex-row my-2 mr-2 text-emerald-500 font-bold italic'>Select a Leaderboard:</h1>
                     {/* DROPDOWN MENUS */}
                     <Dropdown
@@ -246,7 +247,7 @@ export default function Leaderboard() {
                 
                 <div className="flex flex-row mb-3"> {/* flex container for search and dropdown menus */}
                     <div className="flex flex-1 text-sm"> {/* SEARCH BAR (updates search every keystroke) */}
-                        <input 
+                        <input
                             type="text"
                             onChange={handleSearch}
                             placeholder="Search - ( Name, Clan, Class )"
@@ -255,28 +256,6 @@ export default function Leaderboard() {
                         />
                     </div>
                 </div>
-                
-                {/* <div className="flex flex-row mb-3">
-                    <div className="flex flex-1 text-sm">
-                        <input 
-                            type="text"
-                            onChange={e=>{setSearchBar(e.target.value)}}
-                            placeholder="Search - ( Name, Clan, Class )"
-                            className="w-full p-2 z-5 border border-gray-600 rounded-md bg-gray-900 text-white
-                                focus:outline-none focus:ring-2 focus:ring-sky-500 focus:shadow-xl focus:shadow-sky-700 duration-100"
-                        />
-                    </div>
-                    <div className="ml-3">
-                        <button 
-                            onClick={()=>{
-                                // handleSearch()
-                                setSearch(SearchBar);
-                            }}
-                            className="px-4 py-2 bg-gray-800 text-white rounded-md border-2 border-gray-700 hover:border-sky-500 hover:bg-gray-800 hover:shadow-lg hover:shadow-sky-500 duration-100">
-                            Search
-                        </button>
-                    </div>
-                </div> */}
                 
                 <ScrollingFrame>
                     {Loading || !Data ? (
@@ -290,7 +269,7 @@ export default function Leaderboard() {
                             const lower_search = Search.toLowerCase();
                             // if search is empty keep all elements or check match
                             const Show = (Search.trim() === "") || Team.player.some(player => player.data.some(
-                                val => val.id !== "GameAccount" && val.id !== "HeroVisualItems" && (val.number || val.string).toString().toLowerCase().includes(lower_search)
+                                val => val.id !== "GameAccount" && val.id !== "HeroVisualItems" && (val.number || val.string)?.toString().toLowerCase().includes(lower_search)
                             ))
                             // hiding elements instead of removing them makes it faster to show and hide while searching? I hope?
                             // return <RankDetail key={Team.order} Show={true} Data={Data} Team={Team} ></RankDetail>

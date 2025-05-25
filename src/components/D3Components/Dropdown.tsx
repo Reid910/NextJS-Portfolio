@@ -1,15 +1,17 @@
-import { SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
-interface options {
+interface Option {
     value: string,
     txt?: string
 }
 
-interface select {
-    (value: SetStateAction<unknown>): string;
-}
-
-export default function Dropdown({Options, Selected, setSelectedStat, label, className}: {Options: [options], Selected?: string, setSelectedStat: select, label?: string, className?: string}) {
+export default function Dropdown({Options, Selected, setSelectedStat, label, className }: {
+        Options: Option[];
+        Selected?: string | number;
+        setSelectedStat: Dispatch<SetStateAction<unknown>>;
+        label?: string;
+        className?: string;
+    }) {
     return <div className={className}>
         {/* Add a label that will overlap the dropdown */}
         {label && (
