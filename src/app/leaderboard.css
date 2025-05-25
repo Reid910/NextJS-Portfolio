@@ -33,7 +33,7 @@
 }
 
 .background {
-  background: linear-gradient(0.1turn, var(--black), var(--darkGreen)), url("@/assets/illidanbg.jpg");
+  background: linear-gradient(0.1turn, var(--black), var(--darkGreen)), url("../assets/illidanbg.jpg");
   background-blend-mode: multiply; /* Blend the gradient with the image */
   background-size: cover;  /* Cover the screen but keep aspect ratio */
   background-position: center;
