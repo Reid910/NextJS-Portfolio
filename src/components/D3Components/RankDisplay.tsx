@@ -101,6 +101,9 @@ export default function RankDisplay({
                     const title = column?.label.en_US || l;
                     const value_obj = Team.data.find((e) => e.id === l);
                     const value = value_obj?.string || value_obj?.number || value_obj?.timestamp;
+                    if (!value) {
+                        return
+                    }
                     const time = RiftTime(value);
                     const display_value =
                         l === "CompletedTime"
@@ -108,7 +111,6 @@ export default function RankDisplay({
                             : l === "RiftTime"
                                 ? time
                                 : value;
-
                     return (
                         <div
                             key={l}

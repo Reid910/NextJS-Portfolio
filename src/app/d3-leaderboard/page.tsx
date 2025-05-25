@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, Dispatch, SetStateAction } from "react";
 
 import Background from "@/components/D3Components/Background";
 import ScrollingFrame from "@/components/D3Components/ScrollingFrame";
@@ -125,7 +125,7 @@ export default function Leaderboard() {
             const partyOptions: options[] = [{'value':'Any','txt':'Any Party'}];
             const UniqueParties = new Map();
             const leaderboardOptions: options[] = [];
-            console.log(leaderboardTypes);
+            // console.log(leaderboardTypes);
             leaderboardTypes.leaderboard?.forEach((ele: leaderboard) => {
                 const lb_slug = ele.ladder?.href.split("/").slice(-1)[0].split("?")[0] // gets only the leaderboard slug
                 leaderboardOptions.push({'value':lb_slug,'txt':UppercaseFirstLetters(lb_slug.replace(/-/g,' '))});
@@ -133,7 +133,7 @@ export default function Leaderboard() {
                 UniqueParties.set(ele.team_size == 1 ? ele.hero_class_string : ele.team_size, {'team_size':ele.team_size,'hero_class_string':ele.hero_class_string})
             })
             
-            console.log(UniqueParties);
+            // console.log(UniqueParties);
             
             UniqueParties.forEach(({team_size, hero_class_string}: {team_size?: number, hero_class_string?: string}) => {
                 if (team_size && team_size > 1) {
@@ -160,7 +160,7 @@ export default function Leaderboard() {
         setLoading(true);
         GetSeasonalLeaderboard(Region,Season,Leaderboard).then((Data) => {
             setData(Data);
-            console.log(Data);
+            // console.log(Data);
             TitleHasHardcode.current = Data?.title?.en_US.toLowerCase().includes('hardcore');
             setLoading(false);
         })
@@ -172,12 +172,12 @@ export default function Leaderboard() {
         setSearch(event.target.value);
     }
     
-    function handleHardcore(value: string) {
-        SetHardcore(value === "true");
-    }
+    // function handleHardcore(value: string) {
+    //     SetHardcore(value === "true");
+    // }
     
-    console.log("Data:", Data);
-    console.log("Data.row:", Data?.row);
+    // console.log("Data:", Data);
+    // console.log("Data.row:", Data?.row);
     
     return (
         <Background>
@@ -218,14 +218,14 @@ export default function Leaderboard() {
                         label='Season'
                         Selected={Season}
                         Options={seasons}
-                        setSelectedStat={SetSeason}
+                        setSelectedStat={SetSeason as Dispatch<SetStateAction<number>>}
                         className='flex justify-end relative ml-2'
                     />
                     <Dropdown
                         label='Hardcore'
-                        Selected={Hardcore.toString()}
+                        Selected={Hardcore}
                         Options={[{value:'true','txt':'Yes'},{value:'false','txt':'No'}]}
-                        setSelectedStat={handleHardcore}
+                        setSelectedStat={SetHardcore}
                         className='flex justify-end relative ml-2'
                     />
                     <Dropdown
