@@ -271,9 +271,12 @@ export default function Leaderboard() {
                             const Show = (Search.trim() === "") || Team.player.some(player => player.data.some(
                                 val => val.id !== "GameAccount" && val.id !== "HeroVisualItems" && (val.number || val.string)?.toString().toLowerCase().includes(lower_search)
                             ))
+                            if (!Show) {
+                                return
+                            }
                             // hiding elements instead of removing them makes it faster to show and hide while searching? I hope?
                             // return <RankDetail key={Team.order} Show={true} Data={Data} Team={Team} ></RankDetail>
-                            return <RankDisplay key={Team.order} Show={Show} Data={Data} Team={Team}></RankDisplay>
+                            return <RankDisplay key={Team.order} Data={Data} Team={Team}></RankDisplay>
                         })
                     )}
                 </ScrollingFrame>
