@@ -1,13 +1,12 @@
 'use server'
 
 const access_key_url = `https://oauth.battle.net/token`;
-const btoa_secret_id = btoa(`${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_CLIENT_SECRET}`);
+const btoa_secret_id = btoa(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`);
 
 let access_key = null;
 // let expire_time = null; // we need to add expire time so that we ask for a new key.
 
 async function getAccessToken() {
-    console.log(process.env.REACT_APP_CLIENT_ID);
     const response = await fetch(access_key_url, {
         method: "POST",
         headers: {
