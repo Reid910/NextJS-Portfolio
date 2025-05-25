@@ -1,6 +1,14 @@
 'use server'
 
 const access_key_url = `https://oauth.battle.net/token`;
+
+if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
+  console.error("❌ Missing CLIENT_ID or CLIENT_SECRET");
+} else {
+  console.log("🔐 CLIENT_ID:", process.env.CLIENT_ID);
+  console.log("🔐 CLIENT_SECRET:", process.env.CLIENT_SECRET);
+}
+
 const btoa_secret_id = btoa(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`);
 
 let access_key = null;
