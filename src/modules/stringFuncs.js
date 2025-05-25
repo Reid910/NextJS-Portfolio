@@ -9,8 +9,4 @@ function UppercaseFirstLetters(string) {
     return NewString;
 }
 
-function CommaNumbers(Num) {
-    return Num;
-}
-
 export { UppercaseFirstLetters }

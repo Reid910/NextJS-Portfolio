@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import PlayerDetail from "@/components/D3Components/PlayerDetail";
-import { UppercaseFirstLetters } from "@/modules/stringFuncs";
 import { RiftTime, RiftColor } from "@/modules/RiftTime";
 
 interface PlayerData {
@@ -37,11 +36,9 @@ interface DataType {
 }
 
 export default function RankDisplay({
-    Show,
     Data,
     Team,
 }: {
-    Show: boolean;
     Data: DataType;
     Team: TeamType;
 }) {
@@ -142,7 +139,7 @@ export default function RankDisplay({
 
             <div className="flex flex-col p-2 w-full">
                 {Team.player.map((player, index) => (
-                    <PlayerDetail key={index} index={index} player={player} />
+                    <PlayerDetail key={index} player={player} />
                 ))}
             </div>
         </div>
