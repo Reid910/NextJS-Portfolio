@@ -3,6 +3,7 @@
 import { RiftTime, RiftColor } from '@/modules/RiftTime';
 import Image from 'next/image';
 import PlayerDetail from '@/components/D3Components/PlayerDetail';
+import { CSSProperties } from 'react';
 
 type PlayerDataEntry = {
   id: string;
@@ -100,13 +101,13 @@ export default function Rank({ Data, Team }: RankProps) {
               : l === 'RiftTime'
               ? RiftTime(value)
               : value;
-
+          const color : CSSProperties = { color: RiftColor(time) };
           return (
             <div key={l} className="flex-2 items-center justify-between bg-gray-900 rounded-md m-1">
               <div className="flex flex-col items-center">
                 <p className="text-xs text-gray-400">{title}</p>
                 <p
-                  style={l === 'RiftTime' ? { color: RiftColor(time) } : undefined}
+                  style={color}
                   className="text-xs font-bold text-white p-2 text-center"
                 >
                   {display_value}

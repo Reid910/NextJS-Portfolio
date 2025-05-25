@@ -4,7 +4,7 @@ function RiftTime(RiftTime) {
 }
 
 function RiftColor(RiftTimeInMins) {
-    return RiftTimeInMins ? `rgb(${Math.min(255, Math.max(0, 100 + (RiftTimeInMins / 15) * 155))}, ${Math.min(255, Math.max(0, 255 - (RiftTimeInMins / 15) * 255))}, 0)` : null;
+    return RiftTimeInMins ? `rgb(${Math.min(255, Math.max(0, 100 + (RiftTimeInMins / 15) * 155))}, ${Math.min(255, Math.max(0, 255 - (RiftTimeInMins / 15) * 255))}, 0)` : undefined;
 }
 
 export { RiftTime, RiftColor }
