@@ -7,7 +7,7 @@ let access_key = null;
 // let expire_time = null; // we need to add expire time so that we ask for a new key.
 
 async function getAccessToken() {
-    console.log(REACT_APP_CLIENT_ID);
+    console.log(process.env.REACT_APP_CLIENT_ID);
     const response = await fetch(access_key_url, {
         method: "POST",
         headers: {
