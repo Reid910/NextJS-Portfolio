@@ -8,7 +8,7 @@ interface Option {
 export default function Dropdown({Options, Selected, setSelectedStat, label, className }: {
         Options: Option[];
         Selected?: string | number;
-        setSelectedStat: Dispatch<SetStateAction<unknown>>;
+        setSelectedStat: Dispatch<SetStateAction<any>>;
         label?: string;
         className?: string;
     }) {
