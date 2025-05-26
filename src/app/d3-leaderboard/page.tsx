@@ -179,9 +179,11 @@ export default function Leaderboard() {
     // console.log("Data:", Data);
     // console.log("Data.row:", Data?.row);
     
+    const DropdownStyles = 'flex relative mx-1 mt-1 md:w-auto'
+    
     return (
         <Background>
-            <h1 className="w-full mb-4 text-center text-6xl font-extrabold text-transparent bg-clip-text 
+            <h1 className="w-full mb-4 text-center text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text 
                 bg-gradient-to-b from-green-600 to-emerald-400">Seasonal Leaderboard</h1>
             
             <div className="flex mb-4 text-2xl text-sky-500 justify-center text-center font-bold">
@@ -203,37 +205,37 @@ export default function Leaderboard() {
                 <u className="text-lg">Conquest Description</u>{': ' + Data?.conquest_desc?.en_US}
             </h1>} */}
             
-            <div className='rounded-3xl w-full h-[90vh] px-3 mb-10 py-5 flex flex-col border-2 border-gray-800'> {/* flex container for search and dropdown menus */}
-                <div className="flex flex-row my-3 px-2"> {/* flex container for search and dropdown menus */}
-                    <h1 className='flex flex-row my-2 mr-2 text-emerald-500 font-bold italic'>Select a Leaderboard:</h1>
+            <div className='rounded-3xl w-full min-h-[90vh] px-3 mb-10 py-5 flex flex-col border-2 border-gray-800'> {/* flex container for search and dropdown menus */}
+                <div className="flex flex-col flex-wrap md:flex-row gap-2 my-3 px-2"> {/* flex container for search and dropdown menus */}
+                    <h1 className='flex flex-row my-2 mr-2 text-emerald-500 font-bold'>Select a Leaderboard:</h1>
                     {/* DROPDOWN MENUS */}
                     <Dropdown
                         label='Region'
                         Selected={Region}
                         Options={regions}
                         setSelectedStat={SetRegion}
-                        className='flex justify-end relative ml-2'
+                        className={DropdownStyles}
                     />
                     <Dropdown
                         label='Season'
                         Selected={Season}
                         Options={seasons}
                         setSelectedStat={SetSeason as Dispatch<SetStateAction<number>>}
-                        className='flex justify-end relative ml-2'
+                        className={DropdownStyles}
                     />
                     <Dropdown
                         label='Hardcore'
                         Selected={Hardcore}
                         Options={[{value:'true','txt':'Yes'},{value:'false','txt':'No'}]}
                         setSelectedStat={SetHardcore}
-                        className='flex justify-end relative ml-2'
+                        className={DropdownStyles}
                     />
                     <Dropdown
                         label='Rift Party'
                         Selected={Party}
                         Options={PartyOptions.current}
                         setSelectedStat={SetParty}
-                        className='flex justify-end relative ml-2'
+                        className={DropdownStyles}
                     />
                     <Dropdown
                         label='Leaderboard'
@@ -241,7 +243,7 @@ export default function Leaderboard() {
                         // FilteredLb={FilteredLb}
                         Options={FilteredLb}
                         setSelectedStat={SetLeaderboard}
-                        className='flex justify-end relative ml-2'
+                        className={DropdownStyles}
                     />
                 </div>
                 

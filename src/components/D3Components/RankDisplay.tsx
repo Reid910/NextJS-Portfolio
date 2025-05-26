@@ -64,7 +64,7 @@ export default function RankDisplay({
 
     return (
         <div
-            className={`border-2 border-b-6 border-gray-700 rounded-md mt-1 hover:shadow-lg hover:shadow-sky-600 hover:border-sky-500 duration-300`}
+            className={`overflow-x-auto border-2 border-b-4 border-gray-700 border-b-emerald-900 rounded-md mt-1 hover:shadow-lg hover:shadow-sky-600 hover:border-sky-500 duration-300`}
         >
             <div className="flex mt-1">
                 <div className="flex flex-row gap-2 px-2 place-items-center justify-start">
